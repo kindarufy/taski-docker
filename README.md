@@ -71,7 +71,8 @@ git clone https://github.com/nikamurkaa/taski-docker.git
 cd taski-docker
 ```
 
-Создать `.env` с PostgreSQL-настройками:
+Скопируйте `.env.example` в `.env` (`cp .env.example .env`,
+в PowerShell — `Copy-Item .env.example .env`). Пример PostgreSQL-настроек:
 
 ```env
 POSTGRES_USER=django_user
@@ -84,7 +85,7 @@ DB_PORT=5432
 Запуск:
 
 ```bash
-docker compose up --build
+docker compose up -d --build
 ```
 
 Миграции:
@@ -97,6 +98,7 @@ docker compose exec backend python manage.py migrate
 
 ```bash
 docker compose exec backend python manage.py collectstatic --noinput
+docker compose exec backend sh -c 'mkdir -p /backend_static/static && cp -r /app/collected_static/. /backend_static/static/'
 ```
 
 ## CI/CD
@@ -125,3 +127,7 @@ Docker Hub namespace не зашит в repository files: `docker-compose.produc
 ## Автор инфраструктурной реализации
 
 [Николь Журбенко](https://github.com/nikamurkaa)
+
+Нужны Docker Engine/Desktop и Compose v2. Интерфейс: http://localhost:8000/.
+Миграции и сборку статики выполняйте из корня проекта после запуска контейнеров.
+Остановка: `docker compose down`. Данные сохраняются в volumes.
