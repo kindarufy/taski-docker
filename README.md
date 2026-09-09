@@ -1,31 +1,33 @@
+**English** | [Русский](README.ru.md)
+
 # Taski Docker
 
-**Taski Docker** — учебный инфраструктурный проект Яндекс Практикума: готовое Django + React приложение подготовлено к работе в Docker, PostgreSQL, Nginx и CI/CD.
+**Taski Docker** is an educational infrastructure project from Yandex Practicum: an existing Django + React application is configured to run with Docker, PostgreSQL, Nginx, and CI/CD.
 
-> Репозиторий является fork исходного учебного проекта `yandex-praktikum/taski-docker`. Моя работа здесь — контейнеризация, инфраструктурная конфигурация и deployment pipeline, а не исходная бизнес-логика todo-приложения.
+> This repository is a fork of the original educational project, `yandex-praktikum/taski-docker`. My work covers containerization, infrastructure configuration, and the deployment pipeline, rather than the todo application's original business logic.
 
-## Мой вклад
+## My contributions
 
-- Dockerfile для Django backend;
-- Dockerfile для React frontend;
-- отдельный Nginx gateway container;
-- запуск backend через Gunicorn;
-- PostgreSQL вместо локальной SQLite-конфигурации;
-- Docker volumes для database и static;
-- `docker-compose.yml` для локального запуска;
-- `docker-compose.production.yml` для server deployment;
-- GitHub Actions CI для backend/frontend и Docker build;
-- отдельный ручной workflow для публикации Docker images и SSH deployment;
-- migrations/static steps после deploy;
-- Telegram notification после успешного production workflow.
+- Dockerfile for the Django backend;
+- Dockerfile for the React frontend;
+- a separate Nginx gateway container;
+- running the backend with Gunicorn;
+- PostgreSQL in place of the local SQLite configuration;
+- Docker volumes for the database and static files;
+- `docker-compose.yml` for local setup;
+- `docker-compose.production.yml` for server deployment;
+- GitHub Actions CI for the backend, frontend, and Docker builds;
+- a separate manual workflow for publishing Docker images and SSH deployment;
+- post-deployment migration and static file steps;
+- Telegram notification after a successful production workflow.
 
-## Стек
+## Tech stack
 
 **Backend:** Python, Django, Django REST Framework, Gunicorn, PostgreSQL  
 **Frontend:** JavaScript, React 18, Axios, Bootstrap  
 **Infrastructure:** Docker, Docker Compose, Nginx, Docker Hub, GitHub Actions, SSH
 
-## Архитектура
+## Architecture
 
 ```text
 Client
@@ -39,14 +41,14 @@ Nginx gateway
        PostgreSQL
 ```
 
-| Container | Назначение |
+| Container | Purpose |
 | --- | --- |
 | `backend` | Django API / Gunicorn |
 | `frontend` | React production build |
 | `gateway` | Nginx entry point |
 | `db` | PostgreSQL |
 
-## Структура
+## Structure
 
 ```text
 .
@@ -62,20 +64,20 @@ Nginx gateway
 └── README.md
 ```
 
-## Локальный запуск
+## Local setup
 
-Нужны Docker Engine/Desktop и Compose v2. Все команды выполняются из корня
-проекта. После запуска интерфейс доступен на `http://localhost:8000/`.
+Docker Engine/Desktop and Compose v2 are required. Run all commands from the
+project root. After startup, the interface is available at `http://localhost:8000/`.
 
-Клонировать этот fork:
+Clone this fork:
 
 ```bash
 git clone https://github.com/nikamurkaa/taski-docker.git
 cd taski-docker
 ```
 
-Скопируйте `.env.example` в `.env` (`cp .env.example .env`,
-в PowerShell — `Copy-Item .env.example .env`). Пример PostgreSQL-настроек:
+Copy `.env.example` to `.env` (`cp .env.example .env`,
+or `Copy-Item .env.example .env` in PowerShell). Example PostgreSQL settings:
 
 ```env
 POSTGRES_USER=django_user
@@ -85,50 +87,50 @@ DB_HOST=db
 DB_PORT=5432
 ```
 
-Запуск:
+Start:
 
 ```bash
 docker compose up -d --build
 ```
 
-Миграции:
+Migrations:
 
 ```bash
 docker compose exec backend python manage.py migrate
 ```
 
-Сборка backend static:
+Collect backend static files:
 
 ```bash
 docker compose exec backend python manage.py collectstatic --noinput
 docker compose exec backend sh -c 'mkdir -p /backend_static/static && cp -r /app/collected_static/. /backend_static/static/'
 ```
 
-Остановка: `docker compose down`. Данные сохраняются в volumes.
+Stop: `docker compose down`. Data is retained in volumes.
 
 ## CI/CD
 
-`.github/workflows/main.yml` запускается на push и pull request в `main`. Он проверяет backend, frontend и локальную сборку Docker images без production-секретов.
+`.github/workflows/main.yml` runs on pushes and pull requests to `main`. It checks the backend, frontend, and local Docker image builds without production secrets.
 
-`.github/workflows/deploy.yml` запускается вручную через `workflow_dispatch`. Он публикует images в Docker Hub и выполняет SSH deployment только для настроенного production environment.
+`.github/workflows/deploy.yml` is triggered manually through `workflow_dispatch`. It publishes images to Docker Hub and deploys over SSH only for a configured production environment.
 
-Docker Hub namespace не зашит в repository files: `docker-compose.production.yml` использует переменную `DOCKER_USERNAME`, а GitHub Actions — secret с тем же именем.
+The Docker Hub namespace is not hardcoded in repository files: `docker-compose.production.yml` uses the `DOCKER_USERNAME` variable, and GitHub Actions uses a secret with the same name.
 
-Секреты Docker Hub, SSH и Telegram хранятся в GitHub Actions Secrets и не должны попадать в repository files.
+Docker Hub, SSH, and Telegram secrets are stored in GitHub Actions Secrets and must not be committed to repository files.
 
-## Что демонстрирует проект
+## Skills demonstrated
 
-- Docker и Compose;
+- Docker and Compose;
 - multi-container application setup;
-- PostgreSQL в container environment;
+- PostgreSQL in a container environment;
 - Nginx routing;
 - production configuration;
-- CI/CD и deployment automation.
+- CI/CD and deployment automation.
 
-## Статус
+## Status
 
-Проект выполнен в рамках курса **«Python-разработчик» Яндекс Практикума** и демонстрирует инфраструктуру backend-приложения: контейнеризацию, CI и контролируемый production deployment.
+Completed as part of the **Yandex Practicum Python Developer course**, this project demonstrates backend application infrastructure: containerization, CI, and controlled production deployment.
 
-## Автор инфраструктурной реализации
+## Infrastructure implementation author
 
-[Николь Журбенко](https://github.com/nikamurkaa)
+[Nicole Zhurbenko](https://github.com/nikamurkaa)
