@@ -64,6 +64,9 @@ Nginx gateway
 
 ## Локальный запуск
 
+Нужны Docker Engine/Desktop и Compose v2. Все команды выполняются из корня
+проекта. После запуска интерфейс доступен на `http://localhost:8000/`.
+
 Клонировать этот fork:
 
 ```bash
@@ -101,6 +104,8 @@ docker compose exec backend python manage.py collectstatic --noinput
 docker compose exec backend sh -c 'mkdir -p /backend_static/static && cp -r /app/collected_static/. /backend_static/static/'
 ```
 
+Остановка: `docker compose down`. Данные сохраняются в volumes.
+
 ## CI/CD
 
 `.github/workflows/main.yml` запускается на push и pull request в `main`. Он проверяет backend, frontend и локальную сборку Docker images без production-секретов.
@@ -127,7 +132,3 @@ Docker Hub namespace не зашит в repository files: `docker-compose.produc
 ## Автор инфраструктурной реализации
 
 [Николь Журбенко](https://github.com/nikamurkaa)
-
-Нужны Docker Engine/Desktop и Compose v2. Интерфейс: http://localhost:8000/.
-Миграции и сборку статики выполняйте из корня проекта после запуска контейнеров.
-Остановка: `docker compose down`. Данные сохраняются в volumes.
